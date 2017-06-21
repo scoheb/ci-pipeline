@@ -7,7 +7,8 @@ properties(
                         string(description: 'fedmsg msg', name: 'CI_MESSAGE'),
                         string(defaultValue: '^(f25|f26|master)$', description: 'fedora branch targets', name: 'TARGETS'),
                         string(defaultValue: 'ci-pipeline', description: 'Main project repo', name: 'PROJECT_REPO'),
-                    ],
+                    ]
+		    ),
 	        pipelineTriggers(
                     [[$class: 'CIBuildTrigger', checks: [], providerName: 'fedora-fedmsg', selector: 'topic = "org.fedoraproject.prod.git.receive"']]
                 )
