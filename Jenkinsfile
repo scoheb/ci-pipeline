@@ -12,7 +12,7 @@ properties(
         ]
 )
 
-node('continuous-infra-slave') {
+node('jenkins-continuous-infra-slave') {
     ansiColor('xterm') {
         timestamps {
             try {
