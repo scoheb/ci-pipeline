@@ -1,7 +1,9 @@
 PROJECT=continuous-infra
+SOURCE_REPO=https://github.com/CentOS-PaaS-SIG/ci-pipeline.git
+##SOURCE_REPO=https://github.com/scoheb/ci-pipeline.git
 oc new-project "${PROJECT}" --display-name="${PROJECT}"
 oc policy add-role-to-user edit -z default -n "${PROJECT}"
 oc create -f continuous-infra-jenkins-master-s2i-template.yaml
-oc new-app jenkins-persistent
+oc new-app jenkins-persistent -p SOURCE_REPOSITORY_URL=${SOURCE_REPO}
 oc create -f continuous-infra-slave-template.yaml
 oc new-app jenkins-continuous-infra-slave-builder
