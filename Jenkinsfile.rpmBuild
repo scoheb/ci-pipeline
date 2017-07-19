@@ -1,0 +1,7 @@
+node() {
+  def buildArgs = "config/Dockerfiles/rpmbuild-test"
+  def containerArgs = ""
+  docker.build('rpmbuild', buildArgs).inside(containerArgs) {
+    sh 'cat /etc/redhat-release'
+  }
+}
