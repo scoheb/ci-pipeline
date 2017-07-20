@@ -6,7 +6,7 @@ RUN yum install -y \
   jq \
   && yum clean all
 ADD run.sh /run.sh
-RUN "echo $CONTAINER_NAME" > /whoami.sh
+RUN "/bin/echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
 USER 1001
 ENTRYPOINT ["/run.sh"]
