@@ -26,9 +26,13 @@ spec:
     jenkinsPipelineStrategy:
       jenkinsfile: |-
         node() {
-          stage('build') {
+          stage('build-rpmbuild') {
             openshiftBuild(buildConfig: 'rpmbuild', showBuildLogs: 'true')
+          }
+          stage('build-ostree') {
             openshiftBuild(buildConfig: 'ostree', showBuildLogs: 'true')
+          }
+          stage('build-e2e') {
             openshiftBuild(buildConfig: 'e2e', showBuildLogs: 'true')
           }
         }
