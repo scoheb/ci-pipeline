@@ -4,6 +4,7 @@ RUN yum install -y \
   ansible \
   jq \
   && yum clean all
+ADD whoami.sh /whoami.sh
 ADD run.sh /run.sh
 RUN chmod +x /*.sh
 USER 1001
