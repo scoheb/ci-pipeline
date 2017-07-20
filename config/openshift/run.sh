@@ -2,5 +2,5 @@
 
 while :; do
     echo "sleeping"
-    sleep 300
+    sleep 10
 done
