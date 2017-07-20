@@ -1,11 +1,12 @@
 FROM centos:centos7
+
 RUN yum install -y epel-release && yum clean all
 RUN yum install -y \
   ansible \
   jq \
   && yum clean all
-ADD whoami.sh /whoami.sh
 ADD run.sh /run.sh
+RUN "echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
 USER 1001
 ENTRYPOINT ["/run.sh"]
