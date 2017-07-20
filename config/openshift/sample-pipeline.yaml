@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: sample-pipeline
+  namespace: continuous-infra
+  selfLink: /oapi/v1/namespaces/continuous-infra/buildconfigs/sample-pipeline
+  uid: 21313ff3-6d60-11e7-88b8-1636d829280f
+  resourceVersion: '38238'
+  creationTimestamp: '2017-07-20T15:28:49Z'
+  labels:
+    app: jenkins-pipeline-example
+  annotations:
+spec:
+  triggers:
+    - type: GitHub
+      github:
+        secret: secret101
+    - type: Generic
+      generic:
+        secret: secret101
+  runPolicy: Serial
+  source:
+    type: None
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        podTemplate(name: 'jenkins-continuous-infra-slave', label: 'jenkins-continuous-infra-slave', cloud: 'openshift') {
+          node('jenkins-continuous-infra-slave') {
+            stage('setup') {
+              git 'https://github.com/jenkinsci/kubernetes-plugin.git'
+              container('rpmbuild') {
+                stage('rpmbuild') {
+                    sh 'ls -l /whoami.sh'
+                    sh '/whoami.sh'
+                }
+              }
+              container('ostree') {
+                stage('ostree') {
+                    sh 'ls -l /whoami.sh'
+                    sh '/whoami.sh'
+                }
+              }
+              container('e2e') {
+                stage('e2e') {
+                    sh 'ls -l /whoami.sh'
+                    sh '/whoami.sh'
+                }
+              }
+            }
+          }
+        }
+  output: {}
+  resources: {}
+  postCommit: {}
+  nodeSelector: null
+status:
+  lastVersion: 3
+
