@@ -55,5 +55,5 @@ spec:
   postCommit: {}
   nodeSelector: null
 status:
-  lastVersion: 3
+  lastVersion: 0
 
