@@ -5,7 +5,6 @@ RUN yum install -y \
   ansible \
   jq \
   && yum clean all
-
 ADD run.sh /run.sh
 RUN /bin/echo "/bin/echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
