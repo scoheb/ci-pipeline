@@ -34,6 +34,9 @@ objects:
       type: Git
     strategy:
       dockerStrategy:
+        env:
+          - name: CONTAINER_NAME
+            value: rpmbuild
       type: Docker
     triggers:
     - type: ConfigChange
