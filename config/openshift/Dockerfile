@@ -6,4 +6,5 @@ RUN yum install -y \
   && yum clean all
 ADD run.sh /run.sh
 RUN chmod +x /*.sh
+USER 1001
 ENTRYPOINT ["/run.sh"]
