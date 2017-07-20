@@ -1,30 +1,30 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: example-builder
+  template: rpmbuild-builder
 metadata:
   annotations:
-    description: continuous-infra Slaves
+    description: rpmbuild container
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: example-builder
+  name: rpmbuild-builder
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
     labels:
-    name: example
+    name: rpmbuild
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: example
+    name: rpmbuild
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: example:latest
+        name: rpmbuild:latest
     resources: {}
     source:
       contextDir: ${SLAVE_REPO_CONTEXTDIR}

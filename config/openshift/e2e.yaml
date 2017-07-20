@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: e2e-builder
+metadata:
+  annotations:
+    description: continuous-infra Slaves
+    iconClass: icon-jenkins
+    tags: instant-app,jenkins
+  name: e2e-builder
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+    labels:
+    name: e2e
+  spec: {}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: e2e
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: e2e:latest
+    resources: {}
+    source:
+      contextDir: ${SLAVE_REPO_CONTEXTDIR}
+      git:
+        ref: ${SLAVE_REPO_REF}
+        uri: ${SLAVE_REPO_URL}
+      type: Git
+    strategy:
+      dockerStrategy:
+      type: Docker
+    triggers:
+    - type: ConfigChange
+parameters:
+- description: Git repository with Dockerfile and slave entrypoint.
+  displayName: Repository URL
+  name: SLAVE_REPO_URL
+  value: https://github.com/scoheb/ci-pipeline.git
+- description: The sub-directory inside the repository.
+  displayName: Context Directory
+  name: SLAVE_REPO_CONTEXTDIR
+  value: config/openshift
+- description: The git ref or tag to use for customization.
+  displayName: Git Reference
+  name: SLAVE_REPO_REF
+  value: test-docker-inside
