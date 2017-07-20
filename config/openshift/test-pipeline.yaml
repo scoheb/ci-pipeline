@@ -31,19 +31,16 @@ spec:
               git 'https://github.com/jenkinsci/kubernetes-plugin.git'
               container('rpmbuild') {
                 stage('rpmbuild') {
-                    sh 'ls -l /whoami.sh'
                     sh '/whoami.sh'
                 }
               }
               container('ostree') {
                 stage('ostree') {
-                    sh 'ls -l /whoami.sh'
                     sh '/whoami.sh'
                 }
               }
               container('e2e') {
                 stage('e2e') {
-                    sh 'ls -l /whoami.sh'
                     sh '/whoami.sh'
                 }
               }
