@@ -27,13 +27,13 @@ spec:
       jenkinsfile: |-
         node() {
           stage('build-rpmbuild') {
-            openshiftBuild(buildConfig: 'rpmbuild', showBuildLogs: 'true')
+            openshiftBuild(namespace: 'ci-containers', buildConfig: 'rpmbuild', showBuildLogs: 'true')
           }
           stage('build-ostree') {
-            openshiftBuild(buildConfig: 'ostree', showBuildLogs: 'true')
+            openshiftBuild(namespace: 'ci-containers', buildConfig: 'ostree', showBuildLogs: 'true')
           }
           stage('build-e2e') {
-            openshiftBuild(buildConfig: 'e2e', showBuildLogs: 'true')
+            openshiftBuild(namespace: 'ci-containers', buildConfig: 'e2e', showBuildLogs: 'true')
           }
         }
   output: {}
