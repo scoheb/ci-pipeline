@@ -3,4 +3,4 @@ yum -y --installroot=/var/tmp/chroot --releasever=7 --nogpg --disablerepo='*' --
 echo "nameserver 8.8.8.8" >> /var/tmp/chroot/etc/resolv.conf
 echo "nameserver 8.8.4.4" >> /var/tmp/chroot/etc/resolv.conf
 #
-chroot /var/tmp/chroot "ldconfig -v"
+chroot /var/tmp/chroot ldconfig -v
