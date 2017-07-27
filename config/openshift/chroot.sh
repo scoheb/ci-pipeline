@@ -1,9 +1,4 @@
 mkdir -p /var/tmp/chroot
-mkdir -p /var/tmp/chroot/var/lib/rpm
-rpm --rebuilddb --root=/var/tmp/chroot
-wget http://mirror.centos.org/centos/6.9/os/x86_64/Packages/centos-release-6-9.el6.12.3.x86_64.rpm
-rpm -i --root=/var/tmp/chroot --nodeps centos-release-6-9.el6.12.3.x86_64.rpm
-ls -lR /var/tmp/chroot/etc/pki/rpm-gpg/*
-rpmkeys -r /var/tmp/chroot --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
-yum --installroot=/var/tmp/chroot install -y rpm-build yum
-
+yum --installroot=/var/tmp/chroot --releasever=7 --nogpg --disablerepo='*' --enablerepo=base install centos-release openssh-clients wget vi nano zip unzip tar mariadb findutils iputils bind-utils rsync
+echo "nameserver 8.8.8.8" >> /var/tmp/chroot/etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /var/tmp/chroot/etc/resolv.conf
