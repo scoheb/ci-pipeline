@@ -6,6 +6,7 @@ RUN yum install -y \
   jq \
   && yum clean all
 ADD run.sh /run.sh
+ADD chroot.sh /chroot.sh
 RUN /bin/echo "/bin/echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
 USER root:root
