@@ -4,6 +4,7 @@ RUN yum install -y epel-release && yum clean all
 RUN yum install -y \
   ansible \
   jq \
+  wget \
   && yum clean all
 ADD run.sh /run.sh
 ADD chroot.sh /chroot.sh
