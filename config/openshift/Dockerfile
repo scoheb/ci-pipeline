@@ -8,6 +8,6 @@ RUN yum install -y \
 ADD run.sh /run.sh
 RUN /bin/echo "/bin/echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
-USER 1001
+USER root:root
 ENTRYPOINT ["/run.sh"]
 
