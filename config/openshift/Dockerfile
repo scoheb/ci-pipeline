@@ -8,6 +8,7 @@ RUN yum install -y \
   && yum clean all
 ADD run.sh /run.sh
 ADD chroot.sh /chroot.sh
+ADD envtest.sh /envtest.sh
 RUN /bin/echo "/bin/echo $CONTAINER_NAME" > /whoami.sh
 RUN chmod +x /*.sh
 USER root:root
