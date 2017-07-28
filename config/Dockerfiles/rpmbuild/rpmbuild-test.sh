@@ -10,7 +10,7 @@ which fedpkg
 if [ "$?" != 0 ]; then echo "ERROR: FEDPKG RPM NOT INSTALLED\nSTATUS: $?"; exit 1; fi
 # Put all output files into logs/ for rsync
 rm -rf ${OUTPUTDIR}/logs
-mkdir-p ${OUTPUTDIR}/logs
+mkdir -p ${OUTPUTDIR}/logs
 # Clone the fedoraproject git repo
 rm -rf ${fed_repo}
 fedpkg clone -a ${fed_repo}
