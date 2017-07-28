@@ -36,8 +36,10 @@ RUN echo "config_opts['basedir'] = '/home/rpmbuild/'" >> /etc/mock/site-defaults
 
 # Copy the build script to the container
 COPY rpmbuild-test.sh /home/rpmbuild-test.sh
+COPY run.sh /run.sh
+RUN chmod a+x /run.sh
 
 USER root:root
 
 # Run the build script
-ENTRYPOINT ["cat"]
+ENTRYPOINT ["/run.sh"]
