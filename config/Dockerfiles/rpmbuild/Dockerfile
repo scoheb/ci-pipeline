@@ -38,4 +38,4 @@ RUN echo "config_opts['basedir'] = '/home/rpmbuild/'" >> /etc/mock/site-defaults
 COPY rpmbuild-test.sh /home/rpmbuild-test.sh
 
 # Run the build script
-#ENTRYPOINT ["bash", "/home/rpmbuild-test.sh"]
+ENTRYPOINT ["cat"]
