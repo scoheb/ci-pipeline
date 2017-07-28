@@ -1,7 +1,11 @@
 #!/bin/bash
 set +e
 
-OUTPUTDIR=/home/${fed_repo}/output
+if [ -z "${OUTPUTDIR}" ] ; then
+  echo "ERROR: no OUTPUTDIR specified"
+  exit 1
+fi
+
 which fedpkg
 if [ "$?" != 0 ]; then echo "ERROR: FEDPKG RPM NOT INSTALLED\nSTATUS: $?"; exit 1; fi
 # Put all output files into logs/ for rsync
