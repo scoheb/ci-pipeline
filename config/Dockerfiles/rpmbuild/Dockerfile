@@ -38,6 +38,7 @@ RUN echo "config_opts['basedir'] = '/home/rpmbuild/'" >> /etc/mock/site-defaults
 COPY rpmbuild-test.sh /home/rpmbuild-test.sh
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
+RUN chmod a+x /home/rpmbuild-test.sh
 
 USER root:root
 
