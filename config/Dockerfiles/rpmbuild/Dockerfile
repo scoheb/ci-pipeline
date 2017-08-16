@@ -57,3 +57,5 @@ ENTRYPOINT ["bash", "/home/rpmbuild-test.sh"]
 # test16
 # test17
 # test18
+# test19
+#Wed Aug 16 10:11:49 EDT 2017
