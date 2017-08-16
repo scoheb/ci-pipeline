@@ -2,6 +2,7 @@ FROM fedora:24
 LABEL maintainer "https://github.com/CentOS-PaaS-SIG/ci-pipeline"
 LABEL description="This container is meant to \
 use fedpkg mock to create rpms."
+LABEL NAME "scott"
 
 # Install all package requirements
 RUN for i in {1..5} ; do dnf -y update && dnf clean all && break || sleep 10 ; done
