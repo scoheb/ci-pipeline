@@ -9,7 +9,7 @@ properties(
                     ]
                 ),
                 pipelineTriggers(
-                        [[$class: 'CIBuildTrigger', checks: [], providerName: 'fedora-fedmsg', selector: 'topic = "org.fedoraproject.dev.logger.log"']]
+                        [[$class: 'CIBuildTrigger', checks: [], providerName: 'fedora-fedmsg', selector: 'topic = "org.fedoraproject.prod.git.receive"']]
                 )
         ]
 )
