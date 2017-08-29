@@ -79,6 +79,7 @@ node('master') {
                               branch="rawhide"
                             fi
 
+                            echo "branch=${branch}" >> ${WORKSPACE}/job.properties
 
                             echo "topic=${MAIN_TOPIC}.ci.pipeline.package.queued" >> ${WORKSPACE}/job.properties
                             touch ${WORKSPACE}/trigger.downstream
