@@ -5,11 +5,11 @@ properties(
                         string(description: 'fedmsg msg', name: 'CI_MESSAGE'),
                         string(defaultValue: '^(f26)$', description: 'fedora branch targets', name: 'TARGETS'),
                         string(defaultValue: 'ci-pipeline', description: 'Main project repo', name: 'PROJECT_REPO'),
-                        string(defaultValue: 'org.centos.prod', description: 'main topic to publish on', name: 'MAIN_TOPIC'),
+                        string(defaultValue: 'org.centos.dev', description: 'main topic to publish on', name: 'MAIN_TOPIC'),
                     ]
                 ),
                 pipelineTriggers(
-                        [[$class: 'CIBuildTrigger', checks: [], providerName: 'fedora-fedmsg', selector: 'topic = "org.fedoraproject.prod.git.receive"']]
+                        [[$class: 'CIBuildTrigger', checks: [], providerName: 'fedora-fedmsg', selector: 'topic = "org.fedoraproject.dev.logger.log"']]
                 )
         ]
 )
