@@ -19,7 +19,22 @@ properties(
         ]
 )
 
-node() {
-  sleep 30
+podTemplate(name: 'fedora-atomic-inline', label: 'fedora-atomic-inline', cloud: 'openshift', serviceAccount: 'jenkins',
+        idleMinutes: 1,  namespace: 'continuous-infra-devel',
+        containers: [
+                // This adds the custom slave container to the pod. Must be first with name 'jnlp'
+                containerTemplate(name: 'jnlp',
+                        image: '172.30.254.79:5000/continuous-infra-devel/jenkins-continuous-infra-slave',
+                        ttyEnabled: false,
+                        args: '${computer.jnlpmac} ${computer.name}',
+                        command: '',
+                        workingDir: '/tmp'),
+        ])
+
+{
+
+    node('fedora-atomic-inline') {
+      echo "hello"
+    }
 }
 
