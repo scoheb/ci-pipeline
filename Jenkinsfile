@@ -317,16 +317,16 @@ podTemplate(name: podName,
                             pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
 
                             // Provision resources
-                            pipelineUtils.provisionResources(currentStage)
+                            //pipelineUtils.provisionResources(currentStage)
 
                             // Stage resources - ostree image boot sanity
-                            pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
+                            //pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
 
                             // Rsync Data
-                            pipelineUtils.rsyncData(currentStage)
+                            //pipelineUtils.rsyncData(currentStage)
 
                             // Teardown resources
-                            pipelineUtils.teardownResources(currentStage)
+                            //pipelineUtils.teardownResources(currentStage)
 
                             // Set our message topic, properties, and content
                             messageFields = pipelineUtils.setMessageFields("image.test.smoke.complete")
@@ -348,13 +348,13 @@ podTemplate(name: podName,
                         pipelineUtils.provisionResources(currentStage)
 
                         // Stage resources - ostree boot sanity
-                        pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
+                        //pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
 
                         // Rsync Data
-                        pipelineUtils.rsyncData(currentStage)
+                        //pipelineUtils.rsyncData(currentStage)
 
                         // Teardown resources
-                        pipelineUtils.teardownResources(currentStage)
+                        //pipelineUtils.teardownResources(currentStage)
 
                         // Set our message topic, properties, and content
                         messageFields = pipelineUtils.setMessageFields("package.test.functional.queued")
@@ -376,7 +376,7 @@ podTemplate(name: podName,
                         pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
 
                         // Run functional tests
-                        pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/package-test.sh")
+                        //pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/package-test.sh")
 
                         // Set our message topic, properties, and content
                         messageFields = pipelineUtils.setMessageFields("package.test.functional.complete")
