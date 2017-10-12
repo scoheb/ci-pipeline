@@ -82,6 +82,7 @@ def list(subjects):
     variables = { }
     for subject in subjects:
         if subject.endswith(".qcow2"):
+            sys.stdout.write("calling host")
             vars = host(subject)
             if vars:
                 hosts.append(subject)
@@ -89,13 +90,16 @@ def list(subjects):
     return { "localhost": { "hosts": hosts, "vars": { } }, "subjects": { "hosts": hosts, "vars": { } }, "_meta": { "hostvars": variables } }
 
 def host(image):
+    sys.stdout.write("in host 1")
     null = open(os.devnull, 'w')
 
     # No name specified, find a port to use
+    sys.stdout.write("in host 2")
     for port in range(2222, 5000):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
+            sys.stdout.write("in host 3")
             sock.bind(("127.0.0.3", port))
         except IOError:
             pass
@@ -107,13 +111,17 @@ def host(image):
         raise RuntimeError("unable to find free local port to map SSH to")
 
     try:
+        sys.stdout.write("in host 4")
         tty = os.open("/dev/tty", os.O_WRONLY)
+        sys.stdout.write("in host 5")
         os.dup2(tty, 2)
     except OSError:
         tty = None
         pass
 
     # A directory for temporary stuff
+    sys.stdout.write("in host 6")
+
     directory = tempfile.mkdtemp(prefix="inventory-cloud")
     identity = os.path.join(directory, "identity")
     with open(identity, 'w') as f:
@@ -127,18 +135,21 @@ def host(image):
         f.write(USER_DATA)
 
     # Create our cloud init so we can log in
+    sys.stdout.write("in host 7")
     cloudinit = os.path.join(directory, "cloud-init.iso")
     subprocess.check_call(["/usr/bin/genisoimage", "-input-charset", "utf-8",
                            "-volid", "cidata", "-joliet", "-rock", "-quiet",
                            "-output", cloudinit, userdata, metadata], stdout=null)
 
+    sys.stdout.write("in host 8")
     # Determine if virtual machine should be kept available for diagnosis after completion
     try:
         diagnose = distutils.util.strtobool(os.getenv("TEST_DEBUG", "0"))
     except ValueError:
         diagnose = 0
 
-    sys.stderr.write("Launching virtual machine for {0}\n".format(image))
+    sys.stdout.write("in host 9")
+    sys.stdout.write("Launching virtual machine for {0}\n".format(image))
 
     # And launch the actual VM
     artifacts = os.environ.get("TEST_ARTIFACTS", os.path.join(os.getcwd(), "artifacts"))
@@ -148,12 +159,14 @@ def host(image):
         if exc.errno != errno.EEXIST or not os.path.isdir(artifacts):
             raise
     log = os.path.join(artifacts, "{0}.log".format(os.path.basename(image)))
+    sys.stdout.write("in host 10")
     proc = subprocess.Popen(["/usr/bin/qemu-system-x86_64", "-m", "1024", image,
         "-enable-kvm", "-snapshot", "-cdrom", cloudinit,
 	"-net", "nic,model=virtio", "-net", "user,hostfwd=tcp:127.0.0.3:{0}-:22".format(port),
 	"-device", "isa-serial,chardev=pts2", "-chardev", "file,id=pts2,path=" + log,
 	#"-display", "none"], stdout=null)
-        "-display", "none"], stdout=open(os.devnull, 'w'))
+    #"-display", "none"], stdout=open(os.devnull, 'w'))
+    "-display", "none"], stdout=open(log, 'a'), stderr=subprocess.STDOUT)
 
     # The variables
     variables = {
