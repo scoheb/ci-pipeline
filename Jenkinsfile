@@ -1,17 +1,20 @@
-env.ghprbGhRepository = env.ghprbGhRepository ?: 'CentOS-PaaS-SIG/ci-pipeline'
-env.ghprbActualCommit = env.ghprbActualCommit ?: 'master'
+
+env.CI_MESSAGE = '{"commit":{"username":"zdohnal","stats":{"files":{"README.patches":{"deletions":0,"additions":30,"lines":30},"sources":{"deletions":1,"additions":1,"lines":2},"vim.spec":{"deletions":7,"additions":19,"lines":26},".gitignore":{"deletions":0,"additions":1,"lines":1},"vim-8.0-rhbz1365258.patch":{"deletions":0,"additions":12,"lines":12}},"total":{"deletions":8,"files":5,"additions":63,"lines":71}},"name":"Zdenek Dohnal","rev":"3ff427e02625f810a2cedb754342be44d6161b39","namespace":"rpms","agent":"zdohnal","summary":"Merge branch \'f25\' into f26","repo":"vim","branch":"f26","seen":false,"path":"/srv/git/repositories/rpms/vim.git","message":"Merge branch \'f25\' into f26\\n","email":"zdohnal@redhat.com"},"topic":"org.fedoraproject.prod.git.receive"}'
+
+env.ghprbGhRepository = 'scoheb/ci-pipeline'
+env.ghprbActualCommit = 'debug-int-tests'
 env.ghprbPullAuthorLogin = env.ghprbPullAuthorLogin ?: ''
 
 // Needed for podTemplate()
-env.SLAVE_TAG = env.SLAVE_TAG ?: 'stable'
-env.RPMBUILD_TAG = env.RPMBUILD_TAG ?: 'stable'
-env.RSYNC_TAG = env.RSYNC_TAG ?: 'stable'
-env.OSTREE_COMPOSE_TAG = env.OSTREE_COMPOSE_TAG ?: 'stable'
-env.PACKAGE_TEST_TAG = env.PACKAGE_TEST_TAG ?: 'stable'
+env.SLAVE_TAG = 'latest'
+env.RPMBUILD_TAG = 'latest'
+env.RSYNC_TAG = 'latest'
+env.OSTREE_COMPOSE_TAG = 'latest'
+env.PACKAGE_TEST_TAG = 'latest'
 
-env.DOCKER_REPO_URL = env.DOCKER_REPO_URL ?: '172.30.254.79:5000'
-env.OPENSHIFT_NAMESPACE = env.OPENSHIFT_NAMESPACE ?: 'continuous-infra'
-env.OPENSHIFT_SERVICE_ACCOUNT = env.OPENSHIFT_SERVICE_ACCOUNT ?: 'jenkins'
+env.DOCKER_REPO_URL = '172.30.254.79:5000'
+env.OPENSHIFT_NAMESPACE = 'continuous-infra-devel'
+env.OPENSHIFT_SERVICE_ACCOUNT = 'devel-jenkins'
 
 // Audit file for all messages sent.
 msgAuditFile = "messages/message-audit.json"
@@ -398,7 +401,7 @@ podTemplate(name: podName,
                         pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
 
                         // Run integration tests
-                        //pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/integration-test.sh")
+                        pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/integration-test.sh")
 
                         // Set our message topic, properties, and content
                         messageFields = pipelineUtils.setMessageFields("compose.test.integration.complete")
