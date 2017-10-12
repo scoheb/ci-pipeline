@@ -74,7 +74,7 @@ podTemplate(name: podName,
             label: podName,
             cloud: 'openshift',
             serviceAccount: OPENSHIFT_SERVICE_ACCOUNT,
-            idleMinutes: 0,
+            idleMinutes: 60,
             namespace: OPENSHIFT_NAMESPACE,
 
         containers: [
