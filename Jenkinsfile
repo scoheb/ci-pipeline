@@ -16,6 +16,8 @@ env.DOCKER_REPO_URL = '172.30.254.79:5000'
 env.OPENSHIFT_NAMESPACE = 'continuous-infra-devel'
 env.OPENSHIFT_SERVICE_ACCOUNT = 'devel-jenkins'
 
+env.TARGET_BRANCH = 'f26'
+
 // Audit file for all messages sent.
 msgAuditFile = "messages/message-audit.json"
 
