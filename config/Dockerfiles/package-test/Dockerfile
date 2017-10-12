@@ -20,14 +20,15 @@ RUN for i in {1..5} ; do dnf -y install ansible \
         git \
         restraint-rhts \
         rsync \
+        standard-test-roles \
         sudo \
         wget \
         && dnf clean all \
         && break || sleep 10 ; done
 
-Run dnf -y install standard-test-roles \
-        --enablerepo=updates-testing \
-        && dnf clean all
+#Run dnf -y install standard-test-roles \
+#        --enablerepo=updates-testing \
+#        && dnf clean all
 
 # Copy the build script to the container
 COPY package-test.sh /tmp/package-test.sh
