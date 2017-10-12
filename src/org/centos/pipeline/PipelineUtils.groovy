@@ -306,7 +306,7 @@ def sendMessageWithAudit(String msgProps, String msgContent, String msgAuditFile
 
     archiveArtifacts allowEmptyArchive: false, artifacts: msgAuditFile
 
-    trackMessage(id)
+    //trackMessage(id)
 }
 
 /**
