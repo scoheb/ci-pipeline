@@ -1,6 +1,5 @@
 #!/bin/bash
 set -eu
-set -x
 
 CURRENTDIR=$(pwd)
 if [ ${CURRENTDIR} == "/" ] ; then
@@ -52,7 +51,7 @@ sed -i s/true/false/ tests/docker/vars.yml
 RC=0
 for test in $ENABLED_TESTS; do
     echo ${test}
-	ansible-playbook -vvvv --inventory=$ANSIBLE_INVENTORY \
+	ansible-playbook -v --inventory=$ANSIBLE_INVENTORY \
 		--extra-vars "subjects=$TEST_SUBJECTS" \
 		tests/${test}/main.yml |& tee -a ${TEST_ARTIFACTS}/${test}.log
         if [ $? -ne 0 ]; then
