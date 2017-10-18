@@ -252,166 +252,166 @@ podTemplate(name: podName,
                         pipelineUtils.checkLastImage(currentStage)
                     }
 
-                    currentStage = "ci-pipeline-ostree-image-compose"
-                    stage(currentStage) {
-                        // Set stage specific vars
-                        pipelineUtils.setStageEnvVars(currentStage)
-                        // We always run, but don't always push to artifacts
-                        env.PUSH_IMAGE = "false"
-
-                        // Check if a new ostree image compose is needed
-                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
-                            // We will push a new qcow2 to artifacts
-                            env.PUSH_IMAGE = "true"
-
-                            // Set our message topic, properties, and content
-                            messageFields = pipelineUtils.setMessageFields("image.running")
-
-                            // Send message org.centos.prod.ci.pipeline.image.running on fedmsg
-                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-                        }
-
-                        // Provision resources
-                        pipelineUtils.provisionResources(currentStage)
-
-                        // Stage resources - ostree image compose
-                        pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
-
-                        // Rsync Data
-                        pipelineUtils.rsyncData(currentStage)
-
-                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
-                            // These variables will mess with boot sanity jobs
-                            // later if they are injected from a non pushed img
-                            ostree_props = "${env.ORIGIN_WORKSPACE}/logs/ostree.props"
-                            ostree_props_groovy = "${env.ORIGIN_WORKSPACE}/ostree.props.groovy"
-                            pipelineUtils.convertProps(ostree_props, ostree_props_groovy)
-                            load(ostree_props_groovy)
-                        }
-                        sh "mv -f ${env.ORIGIN_WORKSPACE}/logs/untested-atomic.qcow2 ${env.WORKSPACE}/"
-
-                        // Teardown resources
-                        pipelineUtils.teardownResources(currentStage)
-
-                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
-                            // Set our message topic, properties, and content
-                            messageFields = pipelineUtils.setMessageFields("image.complete")
-
-                            // Send message org.centos.prod.ci.pipeline.image.complete on fedmsg
-                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-
-                        } else {
-                            echo "Not Pushing a New Image"
-                        }
-                    }
-
-                    currentStage = "ci-pipeline-ostree-image-boot-sanity"
-                    stage(currentStage) {
-                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
-                            pipelineUtils.setStageEnvVars(currentStage)
-
-                            // Set our message topic, properties, and content
-                            messageFields = pipelineUtils.setMessageFields("image.test.smoke.running")
-
-                            // Send message org.centos.prod.ci.pipeline.image.test.smoke.running on fedmsg
-                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-
-                            // Provision resources
-                            //pipelineUtils.provisionResources(currentStage)
-
-                            // Stage resources - ostree image boot sanity
-                            //pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
-
-                            // Rsync Data
-                            //pipelineUtils.rsyncData(currentStage)
-
-                            // Teardown resources
-                            //pipelineUtils.teardownResources(currentStage)
-
-                            // Set our message topic, properties, and content
-                            messageFields = pipelineUtils.setMessageFields("image.test.smoke.complete")
-
-                            // Send message org.centos.prod.ci.pipeline.image.test.smoke.complete on fedmsg
-                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-
-                        } else {
-                            echo "Not Running Image Boot Sanity on Image"
-                        }
-
-                    }
-
-                    currentStage = "ci-pipeline-ostree-boot-sanity"
-                    stage(currentStage) {
-                        pipelineUtils.setStageEnvVars(currentStage)
-
-                        // Provision resources
-                        pipelineUtils.provisionResources(currentStage)
-
-                        // Stage resources - ostree boot sanity
-                        //pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
-
-                        // Rsync Data
-                        //pipelineUtils.rsyncData(currentStage)
-
-                        // Teardown resources
-                        //pipelineUtils.teardownResources(currentStage)
-
-                        // Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("package.test.functional.queued")
-
-                        // Send message org.centos.prod.ci.pipeline.package.test.functional.queued on fedmsg
-                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
-                    }
-
-                    currentStage = "ci-pipeline-functional-tests"
-                    stage(currentStage) {
-                        // Set stage specific vars
-                        pipelineUtils.setStageEnvVars(currentStage)
-                        env.RSYNC_PASSWORD = "${env.REAL_RSYNC_PASSWORD}"
-
-                        //Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("package.test.functional.running")
-
-                        // Send message org.centos.prod.ci.pipeline.package.test.functional.running on fedmsg
-                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
-
-                        // Run functional tests
-                        //pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/package-test.sh")
-
-                        // Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("package.test.functional.complete")
-
-                        // Send message org.centos.prod.ci.pipeline.package.test.functional.complete on fedmsg
-                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
-
-                        // Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.queued")
-
-                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.queued on fedmsg
-                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-                    }
-
-                    currentStage = "ci-pipeline-atomic-host-tests"
-                    stage(currentStage) {
-                        // Set stage specific vars
-                        pipelineUtils.setStageEnvVars(currentStage)
-                        env.RSYNC_PASSWORD = "${env.REAL_RSYNC_PASSWORD}"
-
-                        // Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.running")
-
-                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.running on fedmsg
-                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-
-                        // Run integration tests
-                        pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/integration-test.sh")
-
-                        // Set our message topic, properties, and content
-                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.complete")
-
-                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.complete on fedmsg
-                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
-                    }
+//                    currentStage = "ci-pipeline-ostree-image-compose"
+//                    stage(currentStage) {
+//                        // Set stage specific vars
+//                        pipelineUtils.setStageEnvVars(currentStage)
+//                        // We always run, but don't always push to artifacts
+//                        env.PUSH_IMAGE = "false"
+//
+//                        // Check if a new ostree image compose is needed
+//                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
+//                            // We will push a new qcow2 to artifacts
+//                            env.PUSH_IMAGE = "true"
+//
+//                            // Set our message topic, properties, and content
+//                            messageFields = pipelineUtils.setMessageFields("image.running")
+//
+//                            // Send message org.centos.prod.ci.pipeline.image.running on fedmsg
+//                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//                        }
+//
+//                        // Provision resources
+//                        pipelineUtils.provisionResources(currentStage)
+//
+//                        // Stage resources - ostree image compose
+//                        pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
+//
+//                        // Rsync Data
+//                        pipelineUtils.rsyncData(currentStage)
+//
+//                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
+//                            // These variables will mess with boot sanity jobs
+//                            // later if they are injected from a non pushed img
+//                            ostree_props = "${env.ORIGIN_WORKSPACE}/logs/ostree.props"
+//                            ostree_props_groovy = "${env.ORIGIN_WORKSPACE}/ostree.props.groovy"
+//                            pipelineUtils.convertProps(ostree_props, ostree_props_groovy)
+//                            load(ostree_props_groovy)
+//                        }
+//                        sh "mv -f ${env.ORIGIN_WORKSPACE}/logs/untested-atomic.qcow2 ${env.WORKSPACE}/"
+//
+//                        // Teardown resources
+//                        pipelineUtils.teardownResources(currentStage)
+//
+//                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
+//                            // Set our message topic, properties, and content
+//                            messageFields = pipelineUtils.setMessageFields("image.complete")
+//
+//                            // Send message org.centos.prod.ci.pipeline.image.complete on fedmsg
+//                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//
+//                        } else {
+//                            echo "Not Pushing a New Image"
+//                        }
+//                    }
+//
+//                    currentStage = "ci-pipeline-ostree-image-boot-sanity"
+//                    stage(currentStage) {
+//                        if (fileExists("${env.WORKSPACE}/NeedNewImage.txt") || ("${env.GENERATE_IMAGE}" == "true")) {
+//                            pipelineUtils.setStageEnvVars(currentStage)
+//
+//                            // Set our message topic, properties, and content
+//                            messageFields = pipelineUtils.setMessageFields("image.test.smoke.running")
+//
+//                            // Send message org.centos.prod.ci.pipeline.image.test.smoke.running on fedmsg
+//                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//
+//                            // Provision resources
+//                            pipelineUtils.provisionResources(currentStage)
+//
+//                            // Stage resources - ostree image boot sanity
+//                            pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
+//
+//                            // Rsync Data
+//                            pipelineUtils.rsyncData(currentStage)
+//
+//                            // Teardown resources
+//                            pipelineUtils.teardownResources(currentStage)
+//
+//                            // Set our message topic, properties, and content
+//                            messageFields = pipelineUtils.setMessageFields("image.test.smoke.complete")
+//
+//                            // Send message org.centos.prod.ci.pipeline.image.test.smoke.complete on fedmsg
+//                            pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//
+//                        } else {
+//                            echo "Not Running Image Boot Sanity on Image"
+//                        }
+//
+//                    }
+//
+//                    currentStage = "ci-pipeline-ostree-boot-sanity"
+//                    stage(currentStage) {
+//                        pipelineUtils.setStageEnvVars(currentStage)
+//
+//                        // Provision resources
+//                        pipelineUtils.provisionResources(currentStage)
+//
+//                        // Stage resources - ostree boot sanity
+//                        pipelineUtils.setupStage(currentStage, 'fedora-atomic-key')
+//
+//                        // Rsync Data
+//                        pipelineUtils.rsyncData(currentStage)
+//
+//                        // Teardown resources
+//                        pipelineUtils.teardownResources(currentStage)
+//
+//                        // Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("package.test.functional.queued")
+//
+//                        // Send message org.centos.prod.ci.pipeline.package.test.functional.queued on fedmsg
+//                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
+//                    }
+//
+//                    currentStage = "ci-pipeline-functional-tests"
+//                    stage(currentStage) {
+//                        // Set stage specific vars
+//                        pipelineUtils.setStageEnvVars(currentStage)
+//                        env.RSYNC_PASSWORD = "${env.REAL_RSYNC_PASSWORD}"
+//
+//                        //Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("package.test.functional.running")
+//
+//                        // Send message org.centos.prod.ci.pipeline.package.test.functional.running on fedmsg
+//                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
+//
+//                        // Run functional tests
+//                        //pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/package-test.sh")
+//
+//                        // Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("package.test.functional.complete")
+//
+//                        // Send message org.centos.prod.ci.pipeline.package.test.functional.complete on fedmsg
+//                        pipelineUtils.sendMessage(messageFields['properties'], messageFields['content'])
+//
+//                        // Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.queued")
+//
+//                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.queued on fedmsg
+//                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//                    }
+//
+//                    currentStage = "ci-pipeline-atomic-host-tests"
+//                    stage(currentStage) {
+//                        // Set stage specific vars
+//                        pipelineUtils.setStageEnvVars(currentStage)
+//                        env.RSYNC_PASSWORD = "${env.REAL_RSYNC_PASSWORD}"
+//
+//                        // Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.running")
+//
+//                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.running on fedmsg
+//                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//
+//                        // Run integration tests
+//                        pipelineUtils.executeInContainer(currentStage, "package-test", "/tmp/integration-test.sh")
+//
+//                        // Set our message topic, properties, and content
+//                        messageFields = pipelineUtils.setMessageFields("compose.test.integration.complete")
+//
+//                        // Send message org.centos.prod.ci.pipeline.compose.test.integration.complete on fedmsg
+//                        pipelineUtils.sendMessageWithAudit(messageFields['properties'], messageFields['content'], msgAuditFile)
+//                    }
 
                 } catch (e) {
                     // Set build result
