@@ -17,7 +17,8 @@ env.DOCKER_REPO_URL = '172.30.254.79:5000'
 env.OPENSHIFT_NAMESPACE = 'continuous-infra-devel'
 env.OPENSHIFT_SERVICE_ACCOUNT = 'devel-jenkins'
 
-env.TARGET_BRANCH = 'f26'
+env.TARGET_BRANCH = 'f27'
+env.GENERATE_IMAGE = true
 
 // Audit file for all messages sent.
 msgAuditFile = "messages/message-audit.json"
@@ -41,8 +42,8 @@ properties(
                 disableConcurrentBuilds(),
                 parameters(
                         [
-                                string(defaultValue: '', description: 'CI Message that triggered the pipeline', name: 'CI_MESSAGE'),
-                                string(defaultValue: 'f26', description: 'Fedora target branch', name: 'TARGET_BRANCH'),
+                                string(description: 'CI Message that triggered the pipeline', name: 'CI_MESSAGE'),
+                                string(defaultValue: 'f27', description: 'Fedora target branch', name: 'TARGET_BRANCH'),
                                 string(defaultValue: '', description: 'HTTP Server', name: 'HTTP_SERVER'),
                                 string(defaultValue: '', description: 'HTTP dir', name: 'HTTP_DIR'),
                                 string(defaultValue: '', description: 'RSync User', name: 'RSYNC_USER'),
@@ -75,7 +76,7 @@ podTemplate(name: podName,
             label: podName,
             cloud: 'openshift',
             serviceAccount: OPENSHIFT_SERVICE_ACCOUNT,
-            idleMinutes: 0,
+            idleMinutes: 60,
             namespace: OPENSHIFT_NAMESPACE,
 
         containers: [
