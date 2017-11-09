@@ -13,6 +13,7 @@ env.OSTREE_IMAGE_COMPOSE_TAG = env.OSTREE_IMAGE_COMPOSE_TAG ?: 'stable'
 env.SINGLEHOST_TEST_TAG = env.SINGLEHOST_TEST_TAG ?: 'stable'
 env.OSTREE_BOOT_IMAGE_TAG = env.OSTREE_BOOT_IMAGE_TAG ?: 'stable'
 env.LINCHPIN_LIBVIRT_TAG = env.LINCHPIN_LIBVIRT_TAG ?: 'stable'
+env.FEDMSG_TAG = env.FEDMSG_TAG ?: 'stable'
 
 env.DOCKER_REPO_URL = env.DOCKER_REPO_URL ?: '172.30.254.79:5000'
 env.OPENSHIFT_NAMESPACE = env.OPENSHIFT_NAMESPACE ?: 'continuous-infra'
@@ -68,6 +69,7 @@ properties(
                                 string(defaultValue: 'stable', description: 'Tag for ostree boot image', name: 'OSTREE_BOOT_IMAGE_TAG'),
                                 string(defaultValue: 'stable', description: 'Tag for rpmbuild image', name: 'RPMBUILD_TAG'),
                                 string(defaultValue: 'stable', description: 'Tag for rsync image', name: 'RSYNC_TAG'),
+                                string(defaultValue: 'stable', description: 'Tag for fedmsg image', name: 'FEDMSG_TAG'),
                                 string(defaultValue: 'stable', description: 'Tag for ostree-compose image', name: 'OSTREE_COMPOSE_TAG'),
                                 string(defaultValue: 'stable', description: 'Tag for ostree-image-compose image', name: 'OSTREE_IMAGE_COMPOSE_TAG'),
                                 string(defaultValue: 'stable', description: 'Tag for singlehost test image', name: 'SINGLEHOST_TEST_TAG'),
@@ -107,6 +109,14 @@ podTemplate(name: podName,
                 containerTemplate(name: 'rsync',
                         alwaysPullImage: true,
                         image: DOCKER_REPO_URL + '/' + OPENSHIFT_NAMESPACE + '/rsync:' + RSYNC_TAG,
+                        ttyEnabled: true,
+                        command: 'cat',
+                        privileged: true,
+                        workingDir: '/workDir'),
+                // This adds the fedmsg test container to the pod.
+                containerTemplate(name: 'fedmsg',
+                        alwaysPullImage: true,
+                        image: DOCKER_REPO_URL + '/' + OPENSHIFT_NAMESPACE + '/fedmsg:' + FEDMSG_TAG,
                         ttyEnabled: true,
                         command: 'cat',
                         privileged: true,

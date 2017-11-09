@@ -27,6 +27,7 @@ tagMap['ostree-image-compose'] = STABLE_LABEL
 tagMap['singlehost-test'] = STABLE_LABEL
 tagMap['ostree-boot-image'] = STABLE_LABEL
 tagMap['linchpin-libvirt'] = STABLE_LABEL
+tagMap['fedmsg'] = STABLE_LABEL
 
 // Fedora Fedmsg Message Provider for stage
 MSG_PROVIDER = "fedora-fedmsg-stage"
@@ -116,6 +117,17 @@ pipeline {
             steps {
                 script {
                     tagMap['rsync'] = pipelineUtils.buildImage(openshiftProject, "rsync")
+                }
+            }
+        }
+        stage("fedmsg image build") {
+            when {
+                // Only build if we have related files in changeset
+                changeset "config/Dockerfiles/fedmsg/**"
+            }
+            steps {
+                script {
+                    tagMap['fedmsg'] = pipelineUtils.buildImage(openshiftProject, "fedmsg")
                 }
             }
         }
@@ -219,6 +231,7 @@ pipeline {
                                         string(name: 'SLAVE_TAG', value: tagMap['jenkins-continuous-infra-slave']),
                                         string(name: 'RPMBUILD_TAG', value: tagMap['rpmbuild']),
                                         string(name: 'RSYNC_TAG', value: tagMap['rsync']),
+                                        string(name: 'FEDMSG_TAG', value: tagMap['fedmsg']),
                                         string(name: 'OSTREE_COMPOSE_TAG', value: tagMap['ostree-compose']),
                                         string(name: 'OSTREE_IMAGE_COMPOSE_TAG', value: tagMap['ostree-image-compose']),
                                         string(name: 'SINGLEHOST_TEST_TAG', value: tagMap['singlehost-test']),
@@ -244,6 +257,7 @@ pipeline {
                                         string(name: 'SLAVE_TAG', value: tagMap['jenkins-continuous-infra-slave']),
                                         string(name: 'RPMBUILD_TAG', value: tagMap['rpmbuild']),
                                         string(name: 'RSYNC_TAG', value: tagMap['rsync']),
+                                        string(name: 'FEDMSG_TAG', value: tagMap['fedmsg']),
                                         string(name: 'OSTREE_COMPOSE_TAG', value: tagMap['ostree-compose']),
                                         string(name: 'OSTREE_IMAGE_COMPOSE_TAG', value: tagMap['ostree-image-compose']),
                                         string(name: 'SINGLEHOST_TEST_TAG', value: tagMap['singlehost-test']),
