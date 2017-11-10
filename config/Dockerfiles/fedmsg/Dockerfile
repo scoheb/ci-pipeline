@@ -45,5 +45,7 @@ EXPOSE 4001
 EXPOSE 2003
 EXPOSE 22
 
+USER root
+
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/usr/bin/entrypoint.sh"]
