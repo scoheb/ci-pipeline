@@ -2,8 +2,6 @@ from fedora:25
 
 RUN yum install -y fedmsg-relay
 
-COPY ssl.py /etc/fedmsg.d/ssl.py
-COPY endpoints.py /etc/fedmsg.d/endpoints.py
 
 COPY setup.sh /tmp/setup.sh
 RUN chmod 777 /tmp/setup.sh
@@ -36,7 +34,10 @@ RUN useradd fedmsg2 -d /home/fedmsg2 && \
     mkdir -p /home/fedmsg2/.ssh && \
     echo "fedmsg2:fedmsg2" | chpasswd
 RUN chmod -R 777 /home/fedmsg2
+
 COPY relay.py /home/fedmsg2/relay.py
+COPY ssl.py /home/fedmsg2/ssl.py
+COPY endpoints.py /home/fedmsg2/endpoints.py
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 
