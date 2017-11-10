@@ -1,7 +1,6 @@
 from fedora:25
 
-RUN yum install -y fedmsg-relay
-RUN yum -y install procps net-tools iproute
+RUN yum install -y procps net-tools iproute fedmsg-relay && yum clean all -y
 
 EXPOSE 4001
 EXPOSE 2003
