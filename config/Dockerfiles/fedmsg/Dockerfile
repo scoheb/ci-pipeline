@@ -2,8 +2,6 @@ from fedora:25
 
 RUN yum install -y fedmsg-relay
 
-USER root
-
 COPY relay.py /etc/fedmsg.d/relay.py
 COPY ssl.py /etc/fedmsg.d/ssl.py
 COPY endpoints.py /etc/fedmsg.d/endpoints.py
@@ -13,24 +11,24 @@ RUN chmod 777 /tmp/setup.sh
 RUN /tmp/setup.sh
 
 # install openssh server
-RUN yum -y install openssh-server
+##RUN yum -y install openssh-server
 
 # install openssh clients
-RUN yum -y install openssh-clients
+##RUN yum -y install openssh-clients
 
 RUN yum -y install procps net-tools iproute
 
 # make ssh directories
-RUN mkdir /var/run/sshd
+##RUN mkdir /var/run/sshd
 
 # create host keys
-RUN ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_key
-RUN ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_rsa_key
-RUN ssh-keygen -b 1024 -t dsa -f /etc/ssh/ssh_host_dsa_key
+##RUN ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_key
+##RUN ssh-keygen -b 1024 -t rsa -f /etc/ssh/ssh_host_rsa_key
+##RUN ssh-keygen -b 1024 -t dsa -f /etc/ssh/ssh_host_dsa_key
 
 # tell ssh to not use ugly PAM
-RUN sed -i 's/UsePAM\syes/UsePAM no/' /etc/ssh/sshd_config
-RUN mkdir -p /var/run/sshd
+##RUN sed -i 's/UsePAM\syes/UsePAM no/' /etc/ssh/sshd_config
+##RUN mkdir -p /var/run/sshd
 
 RUN useradd fedmsg2 -d /home/fedmsg2 && \
     mkdir -p /home/fedmsg2/.ssh && \
@@ -38,14 +36,15 @@ RUN useradd fedmsg2 -d /home/fedmsg2 && \
 
 
 # adding public key to authorized keys
-ADD unsafe.pub /home/fedmsg2/
-RUN cat /home/fedmsg2/unsafe.pub >> /home/fedmsg2/.ssh/authorized_keys
-RUN chmod 400 /home/fedmsg2/.ssh/authorized_keys
-RUN chown fedmsg2:fedmsg2 /home/fedmsg2/.ssh/authorized_keys
+##ADD unsafe.pub /home/fedmsg2/
+##RUN cat /home/fedmsg2/unsafe.pub >> /home/fedmsg2/.ssh/authorized_keys
+##RUN chmod 400 /home/fedmsg2/.ssh/authorized_keys
+##RUN chown fedmsg2:fedmsg2 /home/fedmsg2/.ssh/authorized_keys
 
 EXPOSE 4001
 EXPOSE 2003
-EXPOSE 22
+##EXPOSE 22
+
 
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
