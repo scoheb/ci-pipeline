@@ -37,7 +37,9 @@ RUN useradd fedmsg2 -d /home/fedmsg2 && \
     mkdir -p /home/fedmsg2/.ssh && \
     echo "fedmsg2:fedmsg2" | chpasswd
 
+RUN chmod -R 777 /home/fedmsg2/
 COPY entrypoint.sh /usr/bin/entrypoint.sh
+
 ENTRYPOINT ["/bin/sh", "/usr/bin/entrypoint.sh"]
 
 USER fedmsg2
@@ -45,7 +47,6 @@ USER fedmsg2
 # adding public key to authorized keys
 ##ADD unsafe.pub /home/fedmsg2/
 ##RUN cat /home/fedmsg2/unsafe.pub >> /home/fedmsg2/.ssh/authorized_keys
-##RUN chmod 400 /home/fedmsg2/.ssh/authorized_keys
 ##RUN chown fedmsg2:fedmsg2 /home/fedmsg2/.ssh/authorized_keys
 
 ##EXPOSE 22
