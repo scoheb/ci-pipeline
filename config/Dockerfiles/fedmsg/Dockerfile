@@ -16,7 +16,7 @@ RUN yum -y install openssh-server
 # install openssh clients
 RUN yum -y install openssh-clients
 
-RUN yum -y install procps net-tools
+RUN yum -y install procps net-tools iproute
 
 # make ssh directories
 RUN mkdir /var/run/sshd
