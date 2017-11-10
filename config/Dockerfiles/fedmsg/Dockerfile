@@ -30,10 +30,17 @@ RUN yum -y install procps net-tools iproute
 ##RUN sed -i 's/UsePAM\syes/UsePAM no/' /etc/ssh/sshd_config
 ##RUN mkdir -p /var/run/sshd
 
+EXPOSE 4001
+EXPOSE 2003
+
 RUN useradd fedmsg2 -d /home/fedmsg2 && \
     mkdir -p /home/fedmsg2/.ssh && \
     echo "fedmsg2:fedmsg2" | chpasswd
 
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+ENTRYPOINT ["/bin/sh", "/usr/bin/entrypoint.sh"]
+
+USER fedmsg2
 
 # adding public key to authorized keys
 ##ADD unsafe.pub /home/fedmsg2/
@@ -41,11 +48,7 @@ RUN useradd fedmsg2 -d /home/fedmsg2 && \
 ##RUN chmod 400 /home/fedmsg2/.ssh/authorized_keys
 ##RUN chown fedmsg2:fedmsg2 /home/fedmsg2/.ssh/authorized_keys
 
-EXPOSE 4001
-EXPOSE 2003
 ##EXPOSE 22
 
 
 
-COPY entrypoint.sh /usr/bin/entrypoint.sh
-ENTRYPOINT ["/bin/sh", "/usr/bin/entrypoint.sh"]
