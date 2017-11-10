@@ -2,6 +2,8 @@ from fedora:25
 
 RUN yum install -y fedmsg-relay
 
+USER root
+
 COPY relay.py /etc/fedmsg.d/relay.py
 COPY ssl.py /etc/fedmsg.d/ssl.py
 COPY endpoints.py /etc/fedmsg.d/endpoints.py
@@ -45,7 +47,6 @@ EXPOSE 4001
 EXPOSE 2003
 EXPOSE 22
 
-USER root
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/usr/bin/entrypoint.sh"]
