@@ -2,7 +2,7 @@ from fedora:25
 
 RUN yum install -y fedmsg-relay
 
-COPY relay.py /etc/fedmsg.d/relay.py
+COPY relay.py /tmp/relay.py
 COPY ssl.py /etc/fedmsg.d/ssl.py
 COPY endpoints.py /etc/fedmsg.d/endpoints.py
 
