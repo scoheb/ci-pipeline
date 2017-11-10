@@ -35,7 +35,7 @@ EXPOSE 2003
 RUN useradd fedmsg2 -d /home/fedmsg2 && \
     mkdir -p /home/fedmsg2/.ssh && \
     echo "fedmsg2:fedmsg2" | chpasswd
-RUN chgrp -Rf root /home/fedmsg2 && chmod -Rf g+w /home/fedmsg2
+RUN chmod -R 777 /home/fedmsg2
 COPY relay.py /home/fedmsg2/relay.py
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh
