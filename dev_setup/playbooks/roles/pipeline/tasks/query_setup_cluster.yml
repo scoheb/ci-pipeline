@@ -73,9 +73,9 @@
   when: build_config_name_check.stdout != ""
 
 - name: "{{ container_config_name }} :: Imagestream and buildconfig do not exist and REPO_URL is set.  Creating..."
-  shell: oc new-app {{ template_name_file.stdout }} ${REPO_URL_PARAM} ${REPO_REF_PARAM}
+  shell: oc new-app {{ template_name_file.stdout }} ${REPO_URL_PARAM}
   args:
-    chdir: "{{ pipeline_dir }}/config/s2i/"
+    chdir: "{{ pipeline_dir }}/config/"
   environment:
     REPO_URL_PARAM: "-p REPO_URL={{ lookup('env','REPO_URL') }}"
     REPO_REF_PARAM: ""
@@ -83,9 +83,9 @@
          (lookup('env','REPO_URL') != "" and lookup('env','REPO_REF') == ""))
 
 - name: "{{ container_config_name }} :: Imagestream and buildconfig do not exist and REPO_REF is set.  Creating..."
-  shell: oc new-app {{ template_name_file.stdout }} ${REPO_URL_PARAM} ${REPO_REF_PARAM}
+  shell: oc new-app {{ template_name_file.stdout }} ${REPO_REF_PARAM}
   args:
-    chdir: "{{ pipeline_dir }}/config/s2i/"
+    chdir: "{{ pipeline_dir }}/config/"
   environment:
     REPO_URL_PARAM: ""
     REPO_REF_PARAM: "-p REPO_REF={{ lookup('env','REPO_REF') }}"
@@ -95,7 +95,7 @@
 - name: "{{ container_config_name }} :: Imagestream and buildconfig do not exist and REPO_URL and REPO_REF are set.  Creating..."
   shell: oc new-app {{ template_name_file.stdout }} ${REPO_URL_PARAM} ${REPO_REF_PARAM}
   args:
-    chdir: "{{ pipeline_dir }}/config/s2i/"
+    chdir: "{{ pipeline_dir }}/config/"
   environment:
     REPO_URL_PARAM: "-p REPO_URL={{ lookup('env','REPO_URL') }}"
     REPO_REF_PARAM: "-p REPO_REF={{ lookup('env','REPO_REF') }}"
@@ -103,9 +103,9 @@
          (lookup('env','REPO_URL') != "" and lookup('env','REPO_REF') != ""))
 
 - name: "{{ container_config_name }} :: Imagestream and buildconfig do not exist and REPO_URL and REPO_REF are NOT set.  Creating..."
-  shell: oc new-app {{ template_name_file.stdout }} ${REPO_URL_PARAM} ${REPO_REF_PARAM}
+  shell: "oc new-app {{ template_name_file.stdout }}"
   args:
-    chdir: "{{ pipeline_dir }}/config/s2i/"
+    chdir: "{{ pipeline_dir }}/config/"
   environment:
     REPO_URL_PARAM: ""
     REPO_REF_PARAM: ""
