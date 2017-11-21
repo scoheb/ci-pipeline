@@ -21,6 +21,7 @@
 - name: Pull down the minishift iso
   get_url:
     url: "{{ minishift_iso }}"
+    timeout: 120
     dest: "{{ minishift_dest_dir }}/minishift.iso"
 
 # check if the minishift profile exists
